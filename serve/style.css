@@ -1,0 +1,36 @@
+*{
+    background: black;
+    color:white;
+    font-size: 1.5rem;
+}
+
+video{
+    height:0;
+    margin:0;
+}
+canvas{
+    width:min(700px,100%);
+}
+
+div{
+    margin:1rem;
+    display: flex;
+}
+textarea{
+    width:min(700px,100%);
+    border-radius: 0.5rem;
+    height:2rem;
+}
+button{
+    height:2rem;
+    width:4.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.5rem;
+    margin:5px;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}

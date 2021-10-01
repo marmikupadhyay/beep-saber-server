@@ -2,11 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beep-Saber</title>
+    <title>Camera testing</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <h1>If you can see this means the socker sever is running properly.</h1>
+    <video id="video" style ="visibility:hidden;">
+
+    </video>
+    <canvas id="canvasOutput"  >
+
+    </canvas>
+    <br>
+    <div id="frame">Frames</div>
+    <div>
+        <textarea id="ip" placeholder="IP Address"></textarea>
+        <button onclick="doItPa()">Done</button>
+    </div>
+    <script async src="opencv.js" onload="opencvIsReady()"></script> -->
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js" integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- <script src="debug.js"></script> -->
 </body>
 </html>
