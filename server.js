@@ -11,6 +11,8 @@ const io = require("socket.io")(server, {
     }
 });
 
+app.use(express.static(__dirname + '/static'));
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/serve/index.html');
 });
