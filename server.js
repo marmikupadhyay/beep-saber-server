@@ -4,7 +4,7 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
     cors: {
-        origin: ["https://marmikupadhyay.github.io","http://192.168.1.8:5500","http://192.168.1.8:3000"],
+        origin: ["https://marmikupadhyay.github.io","http://192.168.1.8:5500","http://192.168.1.8:3000","http://localhost","http://localhost:3000","http://localhost:5500"],
         methods: ["GET", "POST"],
         allowedHeaders: ["my-custom-header"],
         credentials: true
