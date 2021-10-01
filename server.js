@@ -15,8 +15,10 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/serve/index.html');
 });
 
-server.listen(5000, () => {
-    console.log('listening on *:5000');
+let port = process.env.PORT || 5000;
+
+server.listen(port, () => {
+    console.log(`listening on *:${port}`);
 });
 
 
