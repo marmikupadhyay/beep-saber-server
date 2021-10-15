@@ -10,6 +10,8 @@ let socket = null;
 let sendCenter = false;
 let timeStart = null;
 let frame = document.getElementById('frame');
+let cameraOrientation = "front";
+let roomcode = "";
 // whether streaming video from the camera.
 let streaming = false;
 let contoursColor = [];
@@ -98,8 +100,6 @@ function passThrough(src, green) {
             0,
             cv.BORDER_DEFAULT
         );
-        // return dstC3;
-        //convert to hsv
         cv.cvtColor(dstC3, dstC3, cv.COLOR_RGBA2RGB);
         cv.cvtColor(dstC3, dstC3, cv.COLOR_RGB2HSV);
     }
@@ -140,8 +140,10 @@ function passThrough(src, green) {
         let test = document.getElementById("canvasOutput");
         circle.center.x = circle.center.x / test.width;
         circle.center.y = circle.center.y / test.height;
-        if (sendCenter)
-            socket.emit("coords", [green, circle.center, circle.radius]);
+        if (sendCenter) {
+            // console.log({roomcode, green, center: circle.center,radius:  circle.radius, cameraOrientation});
+            socket.emit("coords", [roomcode, green, circle.center, circle.radius, cameraOrientation]);
+        }
     }
     contours.delete();
     hierarchy.delete();
@@ -169,7 +171,11 @@ function getMaxCircle(contours) {
 
 function doItPa() {
     let ip = document.getElementById('ip');
-    socket = io("https://beep-saber.herokuapp.com/", {
+    if (ip.value == "") return;
+    roomcode = ip.value;
+    socket = io(
+        "https://beep-saber.herokuapp.com/",
+        {
         withCredentials: true,
         extraHeaders: {
             "my-custom-header": "abcd"
@@ -178,4 +184,16 @@ function doItPa() {
     socket.on("connect", () => { console.log("connected"); });
     console.log(socket);
     sendCenter = true;
+}
+
+function toggleCameraOrientation() {
+    let obj = document.getElementById("cameraOrient");
+    if (obj.innerHTML == "front") {
+        obj.innerHTML = "side";
+        cameraOrientation = "side";
+    }
+    else {
+        obj.innerHTML = "front";
+        cameraOrientation = "front";
+    }
 }
