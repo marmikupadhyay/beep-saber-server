@@ -4,7 +4,7 @@ let src = null;
 let dstC1 = null;
 let dstC3 = null;
 let dstC4 = null;
-let width = 320;
+let width = 180;
 let height = 0;
 let socket = null;
 let sendCenter = false;
@@ -82,25 +82,27 @@ function startVideoProcessing() {
 function processVideo() {
     vc.read(src);
     let result = passThrough(src, true);
-    result = passThrough(result, false);
+    result = passThrough(src, false);
     cv.imshow("canvasOutput", result);
     requestAnimationFrame(processVideo);
 }
 
 function passThrough(src, green) {
     //guassian blur
-    cv.GaussianBlur(
-        src,
-        dstC3,
-        { width: 11, height: 11 },
-        0,
-        0,
-        cv.BORDER_DEFAULT
-    );
-    // return dstC3;
-    //convert to hsv
-    cv.cvtColor(dstC3, dstC3, cv.COLOR_RGBA2RGB);
-    cv.cvtColor(dstC3, dstC3, cv.COLOR_RGB2HSV);
+    if (green) {
+        cv.GaussianBlur(
+            src,
+            dstC3,
+            { width: 9, height: 9 },
+            0,
+            0,
+            cv.BORDER_DEFAULT
+        );
+        // return dstC3;
+        //convert to hsv
+        cv.cvtColor(dstC3, dstC3, cv.COLOR_RGBA2RGB);
+        cv.cvtColor(dstC3, dstC3, cv.COLOR_RGB2HSV);
+    }
     //inrange
     let lowScalar;
     let highScalar;
@@ -109,12 +111,13 @@ function passThrough(src, green) {
         highScalar = new cv.Scalar(64, 255, 255, 255);
     }
     else {
-        lowScalar = new cv.Scalar(55,64,83, 255);
-        highScalar = new cv.Scalar(174,201,210, 255);
+        lowScalar = new cv.Scalar(55, 64, 83, 255);
+        highScalar = new cv.Scalar(174, 201, 210, 255);
     }
     let low = new cv.Mat(height, width, dstC3.type(), lowScalar);
     let high = new cv.Mat(height, width, dstC3.type(), highScalar);
     cv.inRange(dstC3, low, high, dstC1);
+
     low.delete();
     high.delete();
     // return dstC1;
@@ -138,7 +141,7 @@ function passThrough(src, green) {
         circle.center.x = circle.center.x / test.width;
         circle.center.y = circle.center.y / test.height;
         if (sendCenter)
-            socket.emit("coords", [green,circle.center, circle.radius]);
+            socket.emit("coords", [green, circle.center, circle.radius]);
     }
     contours.delete();
     hierarchy.delete();
@@ -166,29 +169,13 @@ function getMaxCircle(contours) {
 
 function doItPa() {
     let ip = document.getElementById('ip');
-    // if (ip.value.split(':').map(Number.parseInt).filter(num => { return (num >= 0 && num <= 255) }).length != 4 
-    // || (function (ip) {
-    //     socket = io(ip);
-    //     if (socket == undefined || socket == null) return false;
-    //     return true;
-    // })(ip.value)) {
-    //     ip.value = "invalid ip";
-    //     setTimeout(() => {
-    //         let ip = document.getElementById('ip');
-    //         ip.value = "";
-    //     }, 1000);
-    // }
-    // else{
-    //     sendCenter = true;
-    // }
     socket = io("https://beep-saber.herokuapp.com/", {
         withCredentials: true,
         extraHeaders: {
             "my-custom-header": "abcd"
         }
     });;
-    socket.on("connect", () => { console.log("connected"); }); // either with send()  socket.send("Hello!");
-    // or with emit() and custom event names  socket.emit("salutations", "Hello!", { "mr": "john" }, Uint8Array.from([1, 2, 3, 4]));});
+    socket.on("connect", () => { console.log("connected"); });
     console.log(socket);
     sendCenter = true;
 }
