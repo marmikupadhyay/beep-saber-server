@@ -8,7 +8,7 @@ let width = 180;
 let height = 0;
 let socket = null;
 let sendCenter = false;
-let timeStart = null;
+let timeStart = 0;
 let frame = document.getElementById('frame');
 let cameraOrientation = "front";
 let roomcode = "";
@@ -82,10 +82,16 @@ function startVideoProcessing() {
 }
 
 function processVideo() {
+    if((Date.now()-timeStart)/1000 < 0.016 )  {
+        requestAnimationFrame(processVideo);
+        return;
+    }
     vc.read(src);
     let result = passThrough(src, true);
     result = passThrough(src, false);
     cv.imshow("canvasOutput", result);
+    frame.innerHTML = `${Math.floor((1 / (Date.now() - timeStart) * 1000))} fps`;
+    timeStart = Date.now();
     requestAnimationFrame(processVideo);
 }
 
@@ -147,8 +153,7 @@ function passThrough(src, green) {
     }
     contours.delete();
     hierarchy.delete();
-    frame.innerHTML = `${Math.floor(1 / (Date.now() - timeStart) * 1000)} fps`;
-    timeStart = Date.now();
+    
     return src;
 }
 
