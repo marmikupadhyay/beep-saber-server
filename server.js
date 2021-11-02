@@ -27,8 +27,8 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/serve/index.html');
+app.get('/:filename', (req, res) => {
+    res.sendFile(__dirname + `/serve/${req.params.filename}.html`);
 });
 
 app.get('/map/:id', (req, res) => {
