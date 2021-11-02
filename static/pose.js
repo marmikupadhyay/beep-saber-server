@@ -82,12 +82,16 @@ function onResults(results) {
     let leftPosition = results.poseLandmarks[15];
     let rightPosition = results.poseLandmarks[16];
     let topPosition = results.poseLandmarks[0];
+    let rightBackPosition = results.poseLandmarks[14];
+    let leftBackPosition = results.poseLandmarks[13];
     let data = {
       "roomcode": roomcode,
       "position" : {
         left: leftPosition,
         right: rightPosition,
         top: topPosition,
+        leftBack: leftBackPosition,
+        rightBack: rightBackPosition,
       }
     }
     socket.emit("coords", data);
