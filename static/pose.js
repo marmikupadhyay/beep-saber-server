@@ -81,17 +81,13 @@ function onResults(results) {
   if (sendCenter) {
     let leftPosition = results.poseLandmarks[15];
     let rightPosition = results.poseLandmarks[16];
-    for(let prop in leftPosition ) {
-      leftPosition[prop] = leftPosition[prop] / 3;
-    }
-    for(let prop in rightPosition ) {
-      rightPosition[prop] = rightPosition[prop] / 3;
-    }
+    let topPosition = results.poseLandmarks[0];
     let data = {
       "roomcode": roomcode,
       "position" : {
         left: leftPosition,
         right: rightPosition,
+        top: topPosition,
       }
     }
     socket.emit("coords", data);
