@@ -62,42 +62,43 @@ function onResults(results) {
     return;
   }
 
-  if(debugMode == false) return;
+  if(debugMode == true){
+    canvasCtx.save();
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-  canvasCtx.save();
-  canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    // Only overwrite existing pixels.
+    canvasCtx.globalCompositeOperation = "source-in";
+    canvasCtx.fillStyle = "#00FF00";
+    canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
 
-  // Only overwrite existing pixels.
-  canvasCtx.globalCompositeOperation = "source-in";
-  canvasCtx.fillStyle = "#00FF00";
-  canvasCtx.fillRect(0, 0, canvasElement.width, canvasElement.height);
+    // Only overwrite missing pixels.
+    canvasCtx.globalCompositeOperation = "destination-atop";
+    canvasCtx.drawImage(
+      results.image,
+      0,
+      0,
+      canvasElement.width,
+      canvasElement.height
+    );
 
-  // Only overwrite missing pixels.
-  canvasCtx.globalCompositeOperation = "destination-atop";
-  canvasCtx.drawImage(
-    results.image,
-    0,
-    0,
-    canvasElement.width,
-    canvasElement.height
-  );
+    canvasCtx.globalCompositeOperation = "source-over";
+    drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+      color: "#00FF00",
+      lineWidth: 4,
+    });
 
-  canvasCtx.globalCompositeOperation = "source-over";
-  drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
-    color: "#00FF00",
-    lineWidth: 4,
-  });
+    drawConnectors(
+      canvasCtx,
+      results.poseLandmarks,
+      POSE_CONNECTIONS,
+      { visibilityMin: 0.65, color: "white" }
+    );
 
-  drawConnectors(
-    canvasCtx,
-    results.poseLandmarks,
-    POSE_CONNECTIONS,
-    { visibilityMin: 0.65, color: "white" }
-  );
+    canvasCtx.restore();
 
-  canvasCtx.restore();
+    grid.updateLandmarks(results.poseWorldLandmarks, POSE_CONNECTIONS);
 
-  grid.updateLandmarks(results.poseWorldLandmarks, POSE_CONNECTIONS);
+  }
 
   if (sendCenter) {
     let leftPosition = results.poseLandmarks[15];
